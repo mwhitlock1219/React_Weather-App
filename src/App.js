@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Moment from "moment";
 import "moment-timezone";
 import tz from "zipcode-to-timezone";
-import "./App.css";
 
 class App extends Component {
   state = {};
@@ -37,8 +36,9 @@ class App extends Component {
           console.log(data);
           this.setState({
             zip: zipInput,
-            temperature: data.main.temp,
+            temperature: Math.round(data.main.temp) + "°C",
             city: data.name,
+            description: data.weather[0].description,
             timezone: data.timezone,
           });
           this.getTime();
@@ -51,27 +51,36 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          <header className="headerContainer">
+      <div className="app">
+        <main>
+          <div className="search-box">
             <input
-              className="headerInput"
               type="text"
-              placeholder="Enter ZIP Code"
+              className="search-bar"
+              placeholder=" Enter Zipcode Here"
               id="zipInput"
-            ></input>
-            <button className="headerSubmit" onClick={this.getWeather}>
+            />
+            <button className="search-button" onClick={this.getWeather}>
               Search
             </button>
-          </header>
-        </div>
-        <h1 className="title">Weather App</h1>
+          </div>
 
-        <div className="weatherDisplay">
-          <h1 id="temp">{this.state.temperature}</h1>
-          <h2 id="city">{this.state.city}</h2>
-          <h3>{this.state.time}</h3>
-        </div>
+          <div className="location-box">
+            <div className="location" id="city">
+              {this.state.city}
+            </div>
+            <div className="date">{this.state.time}</div>
+          </div>
+
+          <div className="weather-box">
+            <div className="temp" id="temperature">
+              {this.state.temperature}
+            </div>
+            <div className="weather" id="description">
+              {this.state.description}
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
