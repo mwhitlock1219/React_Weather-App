@@ -7,7 +7,7 @@ class App extends Component {
   state = {}; // leave blank because you'll be getting this info from your fetch and then setting it as state
 
   getTime = () => {
-    const zone = tz.lookup(this.state.zip); //uses "zipcode-to-timezone" to find hte timezone of the zip that has been fetched
+    const zone = tz.lookup(this.state.zip); //uses "zipcode-to-timezone" to find the timezone of the zip that has been fetched
     const now = Moment().tz(zone).format("dddd, MMMM Do YYYY, h:mm:ss a"); // uses "moment" to find date&time of call then timezone in input using variable above then eveything is fomatted to  look nice
 
     this.setState({
@@ -26,7 +26,7 @@ class App extends Component {
         ",us&appid=c65692185192c2852cfc0a2ec9095d2a&units=imperial" // api key and converting info to metric
     )
       .then((response) => {
-        // if data could not be fetch this would catch it and let you know there was an error
+        // if there is an error in getting the response then this will print in th e console
         if (response.status !== 200) {
           console.log(
             "Looks like there was a problem. Status Code: " + response.status
@@ -40,10 +40,13 @@ class App extends Component {
           this.setState({
             // setting the different states to call on later in render
             zip: zipInput,
-            temperature: Math.round(data.main.temp) + "°C",
+            temperature: Math.round(data.main.temp) + "°F",
             city: data.name,
             description: data.weather[0].description,
             timezone: data.timezone,
+            country: data.sys.country,
+            lat: data.coord.lat,
+            long: data.coord.lon,
           });
           this.getTime(); //calls function
         });
@@ -73,7 +76,7 @@ class App extends Component {
 
           <div className="location-box">
             <div className="location" id="city">
-              {this.state.city}
+              {this.state.city}, {this.state.country}
             </div>
             <div className="date">{this.state.time}</div>
           </div>
